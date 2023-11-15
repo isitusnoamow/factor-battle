@@ -130,3 +130,19 @@ input {
   height: 2rem;
   font-size: 2rem;
 }
+
+#answerfield {
+  display: flex;
+  flex-direction: row;
+}
+
+#cubic {
+  display: none;
+}
+
+#answerfield input {
+  width: 5rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  height: auto;
+}

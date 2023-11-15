@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Factor Battle</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script src="./main.js"></script>
   <link rel="stylesheet" href="style.css">
   </head>
@@ -20,7 +21,7 @@
         <button id="factor" onclick="start()">Factor</button>
       </div>
       <div class="container" id="game">
-        <h1 id="no">1/10</h1>
+        <h1 id="no">1/15</h1>
         <h1 id="question"></h1>
         <div id ="answerfield">
           <label for="number">(x +</label>
@@ -28,6 +29,11 @@
           <label for="number">)(x +</label>
           <input type="text" id="sol2" />
           <label for="number">)</label>
+          <div id="cubic">
+            <label for="number">(x +</label>
+            <input type="text" id="sol3" />
+            <label for="number">)</label>
+          </div>
         </div>
         <br />
 

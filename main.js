@@ -1,16 +1,11 @@
 let seed = 1;
-let ogseed = 1;
 let currentAnswer = [];
 let startTime = 0;
 let question = 1;
 let correctsfx = new Audio("correct.mp3");
 let wrongsfx = new Audio("wrong.mp3");
 let attempts = 0;
-
-function random() {
-  var x = Math.sin(seed++) * 10000;
-    return x - Math.floor(x);
-}
+let generator;
 
 // onclick function for the button with the id random to set the field with id number to a random number
 function randomSeed() {
@@ -22,12 +17,12 @@ function createEasyQuadratic() {
   if (Math.random ()> 0.5){
     a += "-"
   }
-  a += Math.ceil(random()*9)
+  a += Math.ceil(generator()*9)
   let b = ""
   if (Math.random() > 0.5){
     b += "-"
   }
-  b += Math.ceil(random()*9)
+  b += Math.ceil(generator()*9)
 
   a = Number(a)
   b = Number(b)
@@ -41,10 +36,41 @@ function createEasyQuadratic() {
   currentAnswer.sort()
 }
 
+function createEasyCubic() {
+  let a = ""
+  if (Math.random() > 0.5) {
+    a += "-"
+  }
+  a += Math.ceil(generator() * 9)
+  let b = ""
+  if (Math.random() > 0.5) {
+    b += "-"
+  }
+  b += Math.ceil(generator() * 9)
+  let c = ""
+  if (Math.random() > 0.5) {
+    c += "-"
+  }
+  c += Math.ceil(generator() * 9)
+
+  a = Number(a)
+  b = Number(b)
+  c = Number(c)
+
+  let bx = a+b+c
+  let cx = a*b + b*c + a*c
+  let dx = a*b*c
+
+  let cubicString = "x^3 + " + bx + "x^2 + " + cx + "x + " + dx
+  document.getElementById("question").innerHTML = cubicString
+  currentAnswer = [a, b, c]
+  currentAnswer.sort()
+}
+
 
 function start(){
   seed = document.getElementById("number").value;  
-  ogseed = seed;
+  generator = new Math.seedrandom(String(seed));
   document.getElementById("intro").style.display = "none";
   document.getElementById("game").style.display = "block";  
   startTime = Date.now();
@@ -55,16 +81,28 @@ function checkQuestion() {
   attempts++;
   let a = Number(document.getElementById("sol1").value)
   let b = Number(document.getElementById("sol2").value)
-  let userAnswer = [a,b];
+  let userAnswer;
+  if (question > 10) {
+    let c = Number(document.getElementById("sol3").value)
+    userAnswer= [a,b,c]
+  } else{
+    userAnswer = [a,b];
+  }
   userAnswer.sort()
-  if (userAnswer[0] == currentAnswer[0] && userAnswer[1] == currentAnswer[1]){
+  if (String(userAnswer) == String(currentAnswer)){
     correctsfx.play()
-    if (question >= 10) {
+    if (question >= 15) {
       finishGame()
     }
+    if (question >= 10) {
+      document.getElementById("cubic").style.display = "block";
+      createEasyCubic()
+    }
+    else{
+      createEasyQuadratic()
+    }
     question++;
-    document.getElementById("no").innerHTML = String(question) + "/10";
-    createEasyQuadratic()
+    document.getElementById("no").innerHTML = String(question) + "/15";
   } else {
     wrongsfx.play()
   }
@@ -83,14 +121,14 @@ String.prototype.hashCode = function() {
 }
 
 function finishGame() {
-  let percent = String(Math.round(1000/attempts))
+  let percent = String(Math.round(1500/attempts))
   let time = String((Date.now() - startTime)/1000)
-  let seedString = String(ogseed)
+  let seedString = String(seed)
   let hashString = percent + time + seedString + "dog"
   document.getElementById("game").style.display = "none";
   document.getElementById("result").style.display = "block";
   document.getElementById("time").innerHTML = "Time: " + time + "s";
   document.getElementById("accuracy").innerHTML = "Accuracy: " + percent + "%";
   document.getElementById("seedy").innerHTML = "Seed: " + seedString;
-  document.getElementById("hash").innerHTML = "Hash: " + String(hashString.hashCode());
+  document.getElementById("hash").innerHTML = "Anti-Cheat Hash: " + String(hashString.hashCode());
 }
